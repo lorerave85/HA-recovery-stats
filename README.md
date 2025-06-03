@@ -30,3 +30,5 @@ Now run script
 ```shell
 python3.11 merge.py
 ```
+Now copy statisticdata.tsv in your HA and run the integration.
+
