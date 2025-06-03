@@ -9,16 +9,16 @@ def merge_tsv_files(input_dir, output_file):
         for file in files:
             if file.endswith(".tsv"):  # Controlla se il file è un TSV
                 file_path = os.path.join(root, file)
-                print(f"Leggendo: {file_path}")
+                print(f"Reading: {file_path}")
                 df = pd.read_csv(file_path, sep='\t', low_memory=False)
                 all_dfs.append(df)
     
     if all_dfs:
         merged_df = pd.concat(all_dfs, ignore_index=True)
         merged_df.to_csv(output_file, sep='\t', index=False)
-        print(f"File unito salvato come: {output_file}")
+        print(f"Merged file saved as: {output_file}")
     else:
-        print("Nessun file .tsv trovato!")
+        print("No .tsv files found!")
 
 # Imposta la cartella principale e il nome del file di output
 input_directory = "stats"  # Modifica con il percorso corretto

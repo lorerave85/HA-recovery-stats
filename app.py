@@ -23,7 +23,7 @@ def fetch_ids_with_filters(db_path, table_name, unit_column, unit_value, filter_
         return ids
 
     except sqlite3.Error as e:
-        print(f"Errore durante l'accesso al database: {e}")
+        print(f"Error accessing database: {e}")
         return None
 
 def fetch_statistics_with_metadata_id(db_path, table_name, metadata_id, statistic_id, unit_value):
@@ -50,7 +50,7 @@ def fetch_statistics_with_metadata_id(db_path, table_name, metadata_id, statisti
         return [dict(zip(column_names, row)) for row in rows]
 
     except sqlite3.Error as e:
-        print(f"Errore durante l'accesso al database: {e}")
+        print(f"Error accessing database: {e}")
         return None
 
 def export_to_tsv(data, output_file):
@@ -63,14 +63,14 @@ def export_to_tsv(data, output_file):
             writer = csv.DictWriter(file, fieldnames=data[0].keys(), delimiter='\t')
             writer.writeheader()
             writer.writerows(data)
-        print(f"Dati esportati con successo in {output_file}.")
+        print(f"Data successfully exported to {output_file}.")
     except Exception as e:
-        print(f"Errore durante l'esportazione dei dati: {e}")
+        print(f"Error while exporting data: {e}")
 
 if __name__ == "__main__":
     # Parser per i parametri dello script
-    parser = argparse.ArgumentParser(description="Estrai dati dal database SQLite e esportali in formato TSV.")
-    parser.add_argument("--filter_value", required=True, help="Valore del parametro statistic_id da filtrare (es: sensor.luce_scrivania_energy).")
+    parser = argparse.ArgumentParser(description="Extract data from SQLite database and export it to TSV.")
+    parser.add_argument("--filter_value", required=True, help="Value of statistic_id parameter to filter (es: sensor.luce_scrivania_energy).")
     
     args = parser.parse_args()
 
