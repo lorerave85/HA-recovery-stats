@@ -93,7 +93,7 @@ if __name__ == "__main__":
     ids = fetch_ids_with_filters(database_path, table_name_meta, unit_column, unit_value, filter_column, filter_value)
 
     if ids:
-        print("ID trovati con unit_of_measurement = 'kWh' e statistic_id specificato:")
+        print("ID found with unit_of_measurement = 'kWh' e statistic_id specificato:")
         for id in ids:
             print(id)
 
@@ -102,14 +102,14 @@ if __name__ == "__main__":
         for metadata_id in ids:
             stats_data = fetch_statistics_with_metadata_id(database_path, table_name_stats, metadata_id, filter_value, unit_value)
             if stats_data:
-                print(f"Dati trovati per metadata_id = {metadata_id}:")
+                print(f"Data found for metadata_id = {metadata_id}:")
                 #for row in stats_data:
                 #    print(row)
                 all_stats_data.extend(stats_data)
             else:
-                print(f"Nessun dato trovato per metadata_id = {metadata_id}.")
+                print(f"No data found per metadata_id = {metadata_id}.")
 
         if all_stats_data:
             export_to_tsv(all_stats_data, output_file)
     else:
-        print("Nessun ID trovato o errore durante il download.")
+        print("No ID found or error while downloading.")
