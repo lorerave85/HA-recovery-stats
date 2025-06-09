@@ -18,17 +18,15 @@ sensor.consumption_38
 ```
 Now run script
 ```shell
-run script.sh
+./script_01.sh
 ```
 This script will create a .tsv file for each metric
 
 ### Merge file
 
-Copy all files in folder /stats
-
 Now run script
 ```shell
-python3.11 merge.py
+./script_02.sh
 ```
 Now copy statisticdata.tsv in your HA and run the integration.
 
