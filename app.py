@@ -87,7 +87,8 @@ if __name__ == "__main__":
 
     # Estrai il nome della directory dall'argomento filter_value
     directory_name = filter_value.split(".", 1)[-1]
-    output_file = os.path.join(directory_name, "statisticdata.tsv")
+    output_dir = os.path.join("stats", directory_name)
+    output_file = os.path.join(output_dir, "statisticdata.tsv")
 
     # Recupera gli ID filtrati
     ids = fetch_ids_with_filters(database_path, table_name_meta, unit_column, unit_value, filter_column, filter_value)
