@@ -1,6 +1,8 @@
 # HA-recovery-stats
 
 ## WORK IN PROGRESS
+This script must be run on a PC or MAC where python 3.11 is installed.
+TO DO: requirement and .venv
 
 ### Extract from DB
 
