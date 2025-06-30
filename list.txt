@@ -18,3 +18,4 @@ sensor.samsung_8_series_energy
 sensor.internet_energy
 sensor.minipc_energy
 sensor.energy_spent
+sensor.shellypmminig3_5432045c02c4_energy
