@@ -2,6 +2,8 @@ import sqlite3
 import csv
 import argparse
 import os
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def fetch_ids_with_filters(db_path, table_name, unit_column, unit_value, filter_column, filter_value):
     try:
@@ -32,8 +34,19 @@ def fetch_statistics_with_metadata_id(db_path, table_name, metadata_id, statisti
         connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
 
-        # Query parametrizzata per filtrare metadata_id e sum non NULL
-        query = f"SELECT '{statistic_id}' AS statistic_id, '{unit_value}' AS unit, strftime('%d.%m.%Y %H:%M', start_ts, 'unixepoch') AS start, state, sum FROM {table_name} WHERE metadata_id = ? AND sum IS NOT NULL"
+        # Recupera start_ts grezzo (Unix timestamp UTC) e ordina cronologicamente
+        query = f"""
+            SELECT
+                '{statistic_id}' AS statistic_id,
+                '{unit_value}' AS unit,
+                start_ts,
+                state,
+                sum
+            FROM {table_name}
+            WHERE metadata_id = ?
+              AND sum IS NOT NULL
+            ORDER BY start_ts
+        """
         cursor.execute(query, (metadata_id,))
 
         # Recupero dei dati
@@ -46,8 +59,42 @@ def fetch_statistics_with_metadata_id(db_path, table_name, metadata_id, statisti
         cursor.close()
         connection.close()
 
-        # Restituzione dei dati come lista di dizionari
-        return [dict(zip(column_names, row)) for row in rows]
+        # Conversione esplicita UTC -> Europe/Rome
+        utc_tz = ZoneInfo("UTC")
+        local_tz = ZoneInfo("Europe/Rome")
+
+        result = []
+        seen_local_timestamps = set()
+
+        for row in rows:
+            item = dict(zip(column_names, row))
+
+            dt_utc = datetime.fromtimestamp(
+                item["start_ts"],
+                tz=utc_tz
+            )
+
+            dt_local = dt_utc.astimezone(local_tz)
+            formatted_start = dt_local.strftime("%d.%m.%Y %H:%M")
+
+            # Warning utile per il cambio DST autunnale:
+            # due istanti UTC diversi possono avere la stessa ora locale.
+            if formatted_start in seen_local_timestamps:
+                print(
+                    "WARNING: ambiguous/duplicate local DST timestamp: "
+                    f"{formatted_start} "
+                    f"(UTC: {dt_utc.isoformat()}, "
+                    f"local: {dt_local.isoformat()})"
+                )
+
+            seen_local_timestamps.add(formatted_start)
+
+            item["start"] = formatted_start
+            del item["start_ts"]
+
+            result.append(item)
+
+        return result
 
     except sqlite3.Error as e:
         print(f"Error accessing database: {e}")
