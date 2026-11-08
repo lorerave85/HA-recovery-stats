@@ -6,6 +6,12 @@ if [[ ! -f list.txt ]]; then
   exit 1
 fi
 
+# Empty the stats folder before starting
+if [[ -d stats ]]; then
+  echo "Cleaning stats folder..."
+  find stats -mindepth 1 -delete
+fi
+
 # Read each line from list.txt
 while IFS= read -r filter_value; do
   # Skip empty lines

@@ -7,6 +7,13 @@ if not exist list.txt (
     exit /b 1
 )
 
+REM Empty the stats folder before starting
+if exist stats (
+    echo Cleaning stats folder...
+    for /d %%D in ("stats\*") do rmdir /s /q "%%D"
+    del /q "stats\*" 2>nul
+)
+
 REM Read each line from list.txt
 for /f "usebackq tokens=*" %%A in ("list.txt") do (
     set "filter_value=%%A"
